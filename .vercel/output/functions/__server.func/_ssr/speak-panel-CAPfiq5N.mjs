@@ -1,7 +1,7 @@
 import { i as __toESM } from "../_runtime.mjs";
 import { o as require_jsx_runtime, s as require_react } from "../_libs/@radix-ui/react-collection+[...].mjs";
 import { m as Check, o as Mic, r as Square } from "../_libs/lucide-react.mjs";
-import { b as useProgress, f as Button, h as roughlyMatches, p as canRecognize, v as startRecognition } from "./router-Dd6zbqjJ.mjs";
+import { b as useProgress, f as Button, h as roughlyMatches, p as canRecognize, v as startRecognition } from "./router-CDCqzIHv.mjs";
 //#region node_modules/.nitro/vite/services/ssr/assets/speak-panel-CAPfiq5N.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();

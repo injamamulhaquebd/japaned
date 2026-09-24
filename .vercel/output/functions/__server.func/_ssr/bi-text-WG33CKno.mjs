@@ -1,5 +1,5 @@
 import { o as require_jsx_runtime } from "../_libs/@radix-ui/react-collection+[...].mjs";
-import { b as useProgress, m as cn } from "./router-Dd6zbqjJ.mjs";
+import { b as useProgress, m as cn } from "./router-CDCqzIHv.mjs";
 //#region node_modules/.nitro/vite/services/ssr/assets/bi-text-WG33CKno.js
 var import_jsx_runtime = require_jsx_runtime();
 function BiText({ text, revealed, className, enClass, bnClass }) {

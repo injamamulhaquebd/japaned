@@ -1,1 +1,0 @@
-import{h as e}from"./store-CvHmoTGj.js";import{n as t}from"./kana-CJbaGK_k.js";import{t as n}from"./journey-CLYBnHky.js";var r=e();function i(){return(0,r.jsx)(n,{groups:t,title:`Katakana from loanwords`,kicker:`Katakana`})}export{i as component};

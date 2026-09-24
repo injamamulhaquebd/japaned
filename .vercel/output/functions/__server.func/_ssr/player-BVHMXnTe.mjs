@@ -1,0 +1,670 @@
+import { i as __toESM } from "../_runtime.mjs";
+import { o as require_jsx_runtime, s as require_react } from "../_libs/@radix-ui/react-collection+[...].mjs";
+import { m as Check, p as ChevronRight } from "../_libs/lucide-react.mjs";
+import { b as useProgress, c as unlockSpeech, f as Button, g as shuffle, l as SceneArt, m as cn, o as AudioBar, s as speechUnlocked } from "./router-CDCqzIHv.mjs";
+import { t as Card } from "./card-D_EAS73j.mjs";
+import { t as SpeakPanel } from "./speak-panel-CAPfiq5N.mjs";
+import { n as Ja, t as BiText } from "./bi-text-WG33CKno.mjs";
+import { t as Progress } from "./progress-Cz3c2XO8.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/player-BVHMXnTe.js
+var import_react = /* @__PURE__ */ __toESM(require_react());
+var import_jsx_runtime = require_jsx_runtime();
+function withName(ja, nameJa) {
+	return ja.replace(/インジャム/g, nameJa || "インジャム");
+}
+function MeaningBlock({ meaning, revealed }) {
+	if (!revealed) return null;
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BiText, {
+		text: meaning,
+		revealed: true,
+		className: "mt-3"
+	});
+}
+function ChoiceButtons({ options, onPick, picked }) {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+		className: "flex flex-col gap-2",
+		children: options.map((o) => {
+			const isPicked = picked === o.key;
+			const show = picked !== null;
+			return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+				type: "button",
+				disabled: picked !== null,
+				onClick: () => onPick(o.correct, o.key),
+				className: cn("min-h-12 rounded-[var(--radius-lg)] bg-card px-4 py-3 text-left text-sm leading-snug shadow-[var(--shadow-border)] transition-[transform,background-color] duration-[var(--motion-quick)] active:scale-[0.98]", show && o.correct && "bg-success/10", show && isPicked && !o.correct && "bg-destructive/10"),
+				children: o.label
+			}, o.key);
+		})
+	});
+}
+function BuildStep({ target, tiles, romaji, meaning, showRomaji, onDone }) {
+	const pool = (0, import_react.useMemo)(() => shuffle(tiles), [tiles]);
+	const [built, setBuilt] = (0, import_react.useState)([]);
+	const [wrong, setWrong] = (0, import_react.useState)(null);
+	const goal = target.replace(/\s/g, "");
+	const current = built.join("");
+	const nextChar = goal[current.length];
+	const tap = (ch, i) => {
+		if (ch === nextChar) {
+			const next = [...built, ch];
+			setBuilt(next);
+			setWrong(null);
+			if (next.join("") === goal) setTimeout(onDone, 400);
+		} else setWrong(`${ch}-${i}`);
+	};
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "space-y-5",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Ja, {
+				className: "text-center",
+				children: built.join(" ") || "…"
+			}),
+			showRomaji ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "text-center text-sm text-muted-foreground",
+				children: romaji
+			}) : null,
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(BiText, {
+				text: meaning,
+				revealed: true
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				className: "flex flex-wrap justify-center gap-2",
+				children: pool.map((ch, i) => {
+					const already = built.filter((b) => b === ch).length >= Array.from(goal).filter((g) => g === ch).length;
+					return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+						type: "button",
+						disabled: already,
+						onClick: () => tap(ch, i),
+						className: cn("flex size-12 items-center justify-center rounded-[var(--radius-md)] bg-card font-display text-xl shadow-[var(--shadow-border)] transition-transform duration-[var(--motion-quick)] active:scale-[0.96]", wrong === `${ch}-${i}` && "bg-destructive/10", already && "opacity-40"),
+						children: ch
+					}, `${ch}-${i}`);
+				})
+			}),
+			current === goal ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "text-center text-sm text-success",
+				children: "The sounds sit together now."
+			}) : null
+		]
+	});
+}
+function TalkView({ lines, nameJa, showRomaji, autoPlay, onDone }) {
+	const [i, setI] = (0, import_react.useState)(0);
+	const [picked, setPicked] = (0, import_react.useState)(null);
+	const line = lines[i];
+	if (!line) return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "space-y-4",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+			className: "text-sm text-muted-foreground",
+			children: "The conversation rests here."
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+			className: "w-full",
+			size: "lg",
+			onClick: onDone,
+			children: "Continue"
+		})]
+	});
+	if (line.role === "narrator") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "space-y-5",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(BiText, {
+			text: line.meaning,
+			revealed: true
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+			className: "w-full",
+			onClick: () => setI(i + 1),
+			children: "Continue"
+		})]
+	});
+	if (line.role === "them") {
+		const ja = withName(line.ja, nameJa);
+		return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "space-y-5",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "text-xs font-medium uppercase tracking-wider text-muted-foreground",
+					children: "They say"
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Ja, { children: ja }),
+				showRomaji ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "text-sm text-muted-foreground",
+					children: line.romaji
+				}) : null,
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AudioBar, {
+					ja,
+					auto: autoPlay && speechUnlocked()
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(BiText, {
+					text: line.meaning,
+					revealed: true
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+					className: "w-full",
+					onClick: () => setI(i + 1),
+					children: "Continue"
+				})
+			]
+		});
+	}
+	if (line.role !== "you") return null;
+	const options = line.options.map((o, idx) => ({
+		key: `${idx}`,
+		correct: o.correct,
+		ja: withName(o.ja, nameJa),
+		label: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+			lang: "ja",
+			className: "ja block text-base",
+			children: withName(o.ja, nameJa)
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+			className: "text-muted-foreground",
+			children: o.meaning.en
+		})] })
+	}));
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "space-y-5",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "text-xs font-medium uppercase tracking-wider text-muted-foreground",
+				children: "You"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(BiText, {
+				text: line.prompt,
+				revealed: true
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChoiceButtons, {
+				options,
+				picked,
+				onPick: (correct, key) => {
+					setPicked(key);
+					if (line.options[Number(key)]) unlockSpeech();
+				}
+			}),
+			picked !== null ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+				className: "w-full",
+				onClick: () => {
+					setPicked(null);
+					setI(i + 1);
+				},
+				children: "Continue"
+			}) : null
+		]
+	});
+}
+function StepView({ step, art, nameJa, onDone }) {
+	const showRomaji = useProgress((s) => s.showRomaji);
+	const autoPlay = useProgress((s) => s.autoPlay);
+	const meetKana = useProgress((s) => s.meetKana);
+	const meetKanji = useProgress((s) => s.meetKanji);
+	const [revealed, setRevealed] = (0, import_react.useState)(false);
+	const [picked, setPicked] = (0, import_react.useState)(null);
+	if (step.kind === "scene") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "space-y-5",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SceneArt, { art: step.art }),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(BiText, {
+				text: step.happening,
+				revealed: true
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+				className: "w-full",
+				size: "lg",
+				onClick: onDone,
+				children: ["Listen", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronRight, {})]
+			})
+		]
+	});
+	if (step.kind === "hear") {
+		const ja = withName(step.ja, nameJa);
+		return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "space-y-5",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SceneArt, { art }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Ja, {
+					className: "text-center",
+					children: step.jaKanji ?? ja
+				}),
+				showRomaji ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "text-center text-sm text-muted-foreground",
+					children: step.romaji
+				}) : null,
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AudioBar, {
+					ja,
+					auto: autoPlay && speechUnlocked(),
+					size: "lg"
+				}),
+				!revealed ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+					variant: "outline",
+					className: "w-full",
+					onClick: () => setRevealed(true),
+					children: "Reveal meaning"
+				}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(MeaningBlock, {
+					meaning: step.meaning,
+					revealed: true
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+					className: "w-full",
+					size: "lg",
+					onClick: onDone,
+					children: "Continue"
+				})] })
+			]
+		});
+	}
+	if (step.kind === "guess") {
+		const ja = withName(step.ja, nameJa);
+		const options = step.options.map((o, i) => ({
+			key: `${i}`,
+			correct: o.correct,
+			label: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [o.label.en, /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+				className: "mt-0.5 block text-muted-foreground",
+				children: o.label.bn
+			})] })
+		}));
+		return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "space-y-5",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Ja, {
+					className: "text-center",
+					children: ja
+				}),
+				showRomaji ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "text-center text-sm text-muted-foreground",
+					children: step.romaji
+				}) : null,
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AudioBar, {
+					ja,
+					auto: autoPlay && speechUnlocked()
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(BiText, {
+					text: step.question,
+					revealed: true
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChoiceButtons, {
+					options,
+					picked,
+					onPick: (_c, key) => {
+						setPicked(key);
+						setRevealed(true);
+					}
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(MeaningBlock, {
+					meaning: step.meaning,
+					revealed
+				}),
+				picked !== null ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+					className: "w-full",
+					onClick: onDone,
+					children: "Continue"
+				}) : null
+			]
+		});
+	}
+	if (step.kind === "copy") {
+		const ja = withName(step.ja, nameJa);
+		return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "space-y-5",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "text-xs font-medium uppercase tracking-wider text-muted-foreground",
+					children: "Copy"
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Ja, {
+					className: "text-center",
+					children: ja
+				}),
+				showRomaji ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "text-center text-sm text-muted-foreground",
+					children: step.romaji
+				}) : null,
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AudioBar, {
+					ja,
+					auto: autoPlay && speechUnlocked()
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SpeakPanel, { ja }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(BiText, {
+					text: step.meaning,
+					revealed: true
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+					className: "w-full",
+					size: "lg",
+					onClick: onDone,
+					children: "Continue"
+				})
+			]
+		});
+	}
+	if (step.kind === "pattern") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "space-y-5",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "text-xs font-medium uppercase tracking-wider text-muted-foreground",
+				children: "Notice the shape"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				className: "space-y-3",
+				children: step.lines.map((l) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+					className: "p-4",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+						type: "button",
+						className: "w-full text-left",
+						onClick: () => unlockSpeech(),
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Ja, {
+								className: "text-xl",
+								children: withName(l.ja, nameJa)
+							}),
+							showRomaji ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								className: "mt-1 text-xs text-muted-foreground",
+								children: l.romaji
+							}) : null,
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(BiText, {
+								text: l.meaning,
+								revealed: true,
+								className: "mt-2"
+							})
+						]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						className: "mt-3",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AudioBar, { ja: withName(l.ja, nameJa) })
+					})]
+				}, l.ja))
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				className: "rounded-[var(--radius-lg)] bg-muted/60 px-4 py-3",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BiText, {
+					text: step.notice,
+					revealed: true
+				})
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+				className: "w-full",
+				size: "lg",
+				onClick: onDone,
+				children: "Continue"
+			})
+		]
+	});
+	if (step.kind === "use") {
+		const options = step.options.map((o, i) => ({
+			key: `${i}`,
+			correct: o.correct,
+			label: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+				lang: "ja",
+				className: "ja block text-base",
+				children: withName(o.ja, nameJa)
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+				className: "text-muted-foreground",
+				children: o.meaning.en
+			})] })
+		}));
+		return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "space-y-5",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "text-xs font-medium uppercase tracking-wider text-muted-foreground",
+					children: "Use it"
+				}),
+				step.promptJa ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Ja, {
+					className: "text-xl",
+					children: withName(step.promptJa, nameJa)
+				}) : null,
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(BiText, {
+					text: step.prompt,
+					revealed: true
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChoiceButtons, {
+					options,
+					picked,
+					onPick: (_c, key) => setPicked(key)
+				}),
+				picked !== null ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+					className: "w-full",
+					onClick: onDone,
+					children: "Continue"
+				}) : null
+			]
+		});
+	}
+	if (step.kind === "build") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BuildStep, {
+		target: step.target,
+		tiles: step.tiles,
+		romaji: step.romaji,
+		meaning: step.meaning,
+		showRomaji,
+		onDone
+	});
+	if (step.kind === "talk") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TalkView, {
+		lines: step.lines,
+		nameJa,
+		showRomaji,
+		autoPlay,
+		onDone
+	});
+	if (step.kind === "kana") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "space-y-5",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "text-xs font-medium uppercase tracking-wider text-muted-foreground",
+				children: "The sounds inside"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Ja, {
+				className: "text-center text-4xl",
+				children: step.word
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(BiText, {
+				text: step.meaning,
+				revealed: true,
+				className: "text-center"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				className: "grid grid-cols-4 gap-2",
+				children: step.parts.map((p) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+					type: "button",
+					onClick: () => {
+						unlockSpeech();
+						meetKana([p.char]);
+					},
+					className: "flex flex-col items-center rounded-[var(--radius-lg)] bg-card py-3 shadow-[var(--shadow-border)]",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+						lang: "ja",
+						className: "ja text-2xl",
+						children: p.char
+					}), showRomaji ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+						className: "text-xs text-muted-foreground",
+						children: p.romaji
+					}) : null]
+				}, p.char + p.romaji))
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AudioBar, {
+				ja: step.word,
+				auto: autoPlay && speechUnlocked()
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "text-sm leading-relaxed text-muted-foreground",
+				children: "You already heard this word. The characters are just the pieces of a sound you know."
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+				className: "w-full",
+				onClick: () => {
+					meetKana(step.parts.map((p) => p.char));
+					onDone();
+				},
+				children: "Continue"
+			})
+		]
+	});
+	const k = step;
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "space-y-5",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "text-xs font-medium uppercase tracking-wider text-muted-foreground",
+				children: "The same word, written deeper"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "flex items-end justify-center gap-4",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+						lang: "ja",
+						className: "ja text-2xl text-muted-foreground",
+						children: k.kana
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+						className: "text-muted-foreground",
+						children: "→"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+						lang: "ja",
+						className: "ja text-5xl",
+						children: k.kanji
+					})
+				]
+			}),
+			showRomaji ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "text-center text-sm text-muted-foreground",
+				children: k.reading
+			}) : null,
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Ja, {
+				className: "text-center text-2xl",
+				children: k.sentence
+			}),
+			showRomaji ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "text-center text-sm text-muted-foreground",
+				children: k.sentenceRomaji
+			}) : null,
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AudioBar, {
+				ja: k.sentence,
+				auto: autoPlay && speechUnlocked()
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(BiText, {
+				text: k.meaning,
+				revealed: true
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+				className: "w-full",
+				onClick: () => {
+					meetKanji(k.kanji);
+					onDone();
+				},
+				children: "Continue"
+			})
+		]
+	});
+}
+function LessonPlayer({ title, art, steps, onComplete, onExit }) {
+	const nameJa = useProgress((s) => s.nameJa);
+	const [index, setIndex] = (0, import_react.useState)(0);
+	const [done, setDone] = (0, import_react.useState)(false);
+	const step = steps[index];
+	const pct = steps.length ? Math.round((done ? steps.length : index) / steps.length * 100) : 100;
+	const next = () => {
+		if (index + 1 >= steps.length) {
+			setDone(true);
+			onComplete();
+		} else setIndex(index + 1);
+	};
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "mx-auto flex min-h-dvh max-w-lg flex-col px-4 pb-8 pt-3",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("header", {
+			className: "mb-4 flex items-center gap-3",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+					type: "button",
+					onClick: onExit,
+					className: "flex size-11 items-center justify-center rounded-[var(--radius-md)] text-muted-foreground",
+					"aria-label": "Back",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronRight, { className: "rotate-180" })
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "min-w-0 flex-1",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						className: "truncate font-display text-sm",
+						children: title.en
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Progress, {
+						value: pct,
+						className: "mt-2"
+					})]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+					className: "tabular-nums text-xs text-muted-foreground",
+					children: [
+						Math.min(index + 1, steps.length),
+						"/",
+						steps.length
+					]
+				})
+			]
+		}), done || !step ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "flex flex-1 flex-col items-center justify-center space-y-4 text-center",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "flex size-14 items-center justify-center rounded-full bg-success/10 text-success",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Check, { className: "size-6" })
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+					className: "font-display text-2xl",
+					children: "You lived this Japanese"
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "max-w-sm text-sm leading-relaxed text-muted-foreground",
+					children: "Not a list. A small real moment. It will come back in other rooms."
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+					className: "w-full max-w-xs",
+					size: "lg",
+					onClick: onExit,
+					children: "Continue"
+				})
+			]
+		}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+			className: "stagger-in flex-1",
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(StepView, {
+				step,
+				art,
+				nameJa,
+				onDone: next
+			})
+		}, index)]
+	});
+}
+function DialoguePlayer({ title, lines, onComplete, onExit }) {
+	const nameJa = useProgress((s) => s.nameJa);
+	const showRomaji = useProgress((s) => s.showRomaji);
+	const autoPlay = useProgress((s) => s.autoPlay);
+	const [done, setDone] = (0, import_react.useState)(false);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "mx-auto flex min-h-dvh max-w-lg flex-col px-4 pb-8 pt-3",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("header", {
+			className: "mb-4 flex items-center gap-3",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+				type: "button",
+				onClick: onExit,
+				className: "flex size-11 items-center justify-center rounded-[var(--radius-md)] text-muted-foreground",
+				"aria-label": "Back",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronRight, { className: "rotate-180" })
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "font-display text-sm",
+				children: title.en
+			})]
+		}), done ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "flex flex-1 flex-col items-center justify-center space-y-4 text-center",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+				className: "font-display text-2xl",
+				children: "You spoke in the situation"
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+				className: "w-full max-w-xs",
+				size: "lg",
+				onClick: onExit,
+				children: "Continue"
+			})]
+		}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TalkView, {
+			lines,
+			nameJa,
+			showRomaji,
+			autoPlay,
+			onDone: () => {
+				setDone(true);
+				onComplete();
+			}
+		})]
+	});
+}
+//#endregion
+export { LessonPlayer as n, DialoguePlayer as t };

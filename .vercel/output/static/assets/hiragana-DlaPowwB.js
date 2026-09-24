@@ -1,0 +1,1 @@
+import{h as e}from"./store-CvHmoTGj.js";import{t}from"./kana-CJbaGK_k.js";import{t as n}from"./journey-znHKzksv.js";var r=e();function i(){return(0,r.jsx)(n,{groups:t,title:`Hiragana from words`,kicker:`Hiragana`})}export{i as component};
