@@ -1,0 +1,327 @@
+Build a complete, functional mobile-first Japanese learning app called Japaneducation.
+
+VERY IMPORTANT — LEARNING METHOD
+
+This app must NOT be a memorization app.
+
+I do NOT want to memorize Japanese words, Bengali meanings, or grammar rules.
+
+I want to learn Japanese naturally, similar to how a Japanese child learns their first language.
+
+The learning process must be:
+
+HEAR → UNDERSTAND → COPY → USE → REPEAT → NATURALLY REMEMBER
+
+The learner should gradually understand Japanese directly, without translating every sentence into Bengali.
+
+Focus ONLY on JLPT N5 Japanese.
+
+---
+
+1. START WITH LISTENING
+
+Introduce Japanese through short everyday situations.
+
+Example:
+
+A person wakes up.
+
+Audio:
+
+「おはよう。」
+
+Show the situation first.
+
+Then reveal the meaning:
+
+“Good morning / সুপ্রভাত”
+
+Do not ask the learner to memorize the word.
+
+Let them hear it repeatedly in different situations.
+
+---
+
+2. LEARN THROUGH REAL SITUATIONS
+
+Create N5 situations such as:
+
+- Morning
+- Home
+- Family
+- School
+- Meeting someone
+- Eating
+- Drinking
+- Shopping
+- Going somewhere
+- Coming home
+- Asking simple questions
+- Daily activities
+
+Each lesson should feel like a small real-life experience.
+
+---
+
+3. LEARN SENTENCES, NOT WORD LISTS
+
+Do NOT present large vocabulary lists.
+
+Instead teach naturally through sentences.
+
+Example:
+
+「これは ほんです。」
+
+Then:
+
+「これは みずです。」
+
+Then:
+
+「これは ねこです。」
+
+The learner should gradually notice the pattern.
+
+Only after several examples give a very short explanation.
+
+---
+
+4. NO GRAMMAR MEMORIZATION
+
+Do not begin lessons with grammar rules.
+
+Use:
+
+Examples → Repetition → Pattern recognition → Simple explanation → Practice
+
+For example, allow the learner to experience:
+
+「わたしは がくせいです。」
+
+「わたしは バングラデシュじんです。」
+
+Then briefly explain what 「は」 and 「です」 are doing.
+
+---
+
+5. LISTENING FIRST
+
+Every lesson should begin with Japanese audio whenever possible.
+
+Use browser Japanese speech synthesis.
+
+Provide:
+
+🔊 Listen
+🔁 Listen again
+🗣️ Repeat
+
+The learner should hear Japanese many times before being asked to remember anything.
+
+---
+
+6. SPEAKING LIKE A CHILD
+
+After hearing a sentence, let the learner repeat it.
+
+Do not punish small mistakes.
+
+If browser speech recognition is available, make it optional.
+
+If unavailable, the lesson must still work.
+
+The goal is confidence and natural repetition.
+
+---
+
+7. HIRAGANA AND KATAKANA
+
+Teach Hiragana and Katakana gradually.
+
+Do not make the learner memorize a giant chart first.
+
+Introduce characters through words they already encountered.
+
+Example:
+
+「ねこ」
+
+Then teach:
+
+ね + こ
+
+Then show how the sounds combine.
+
+Do the same with Katakana.
+
+---
+
+8. KANJI
+
+Introduce only useful N5 Kanji gradually.
+
+Do not give a large Kanji memorization list.
+
+Example:
+
+みず → 水
+
+Then show:
+
+水を のみます。
+
+Let the learner see the same Kanji repeatedly in meaningful sentences.
+
+---
+
+9. CONVERSATION
+
+Create very short interactive conversations.
+
+Example:
+
+A: 「こんにちは。」
+
+B: 「こんにちは。」
+
+A: 「おなまえは？」
+
+B: 「インジャムです。」
+
+The learner should listen first, then choose/speak the response.
+
+Gradually increase the conversation length.
+
+---
+
+10. UNDERSTANDING WITHOUT TRANSLATION
+
+At the beginning, Bengali explanations are allowed.
+
+But do not show Bengali translation immediately for everything.
+
+Use:
+
+Japanese audio → situation → learner guesses meaning → reveal meaning
+
+As the learner improves, reduce Bengali support.
+
+The goal is eventually:
+
+Japanese → Meaning
+
+instead of:
+
+Japanese → Bengali → Meaning
+
+---
+
+11. N5 ONLY
+
+Do not add N4, N3, N2 or N1.
+
+Only build a complete beginner/N5 learning journey.
+
+Cover essential N5:
+
+- greetings
+- introductions
+- family
+- numbers
+- time
+- dates
+- food
+- home
+- school
+- shopping
+- daily activities
+- basic questions
+- basic answers
+- essential N5 grammar
+- Hiragana
+- Katakana
+- essential N5 Kanji
+- listening
+- speaking
+- reading
+- writing
+- simple conversations
+
+---
+
+12. DAILY LEARNING
+
+Each day should feel like learning a little Japanese naturally.
+
+Example:
+
+Listen → Understand → Repeat → Use → Review
+
+Do not make the learner memorize 20 or 50 words per day.
+
+Reintroduce previously learned Japanese naturally inside new situations.
+
+---
+
+13. REVIEW
+
+Do NOT make review only:
+
+“What is the Bengali meaning of this word?”
+
+Instead use:
+
+- Listen and understand
+- Choose the correct situation
+- Complete a sentence
+- Respond to a conversation
+- Repeat a sentence
+- Recognize Hiragana/Katakana
+- Recognize Kanji
+- Understand simple Japanese
+
+---
+
+14. APP DESIGN
+
+Create a modern, friendly, simple mobile interface.
+
+Main sections:
+
+- Home
+- Learn
+- Daily Lesson
+- Listening
+- Speaking
+- Conversation
+- Hiragana
+- Katakana
+- Kanji
+- Review
+- Progress
+- Settings
+
+All buttons and pages must actually work.
+
+Use localStorage/IndexedDB for progress.
+
+Make it mobile-friendly and compatible with Android WebView/Kodular.
+
+No paid APIs.
+
+Do not create only a visual prototype.
+
+Build a genuinely functional N5 Japanese learning app.
+
+FINAL PRINCIPLE
+
+The learner should feel:
+
+“I am experiencing and using Japanese.”
+
+NOT:
+
+“I am memorizing Japanese words and grammar.”
+
+Build the entire N5 learning experience around this principle.

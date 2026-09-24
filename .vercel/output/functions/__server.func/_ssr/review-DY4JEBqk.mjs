@@ -1,0 +1,397 @@
+import { i as __toESM } from "../_runtime.mjs";
+import { o as require_jsx_runtime, s as require_react } from "../_libs/@radix-ui/react-collection+[...].mjs";
+import { b as useProgress, f as Button, g as shuffle, m as cn, o as AudioBar, s as speechUnlocked, u as Page } from "./router-Dd6zbqjJ.mjs";
+import { t as Card } from "./card-D_EAS73j.mjs";
+import { t as dialogues } from "./conversations-BZh4Sfom.mjs";
+import { o as reachableSentences, s as sentenceBank } from "./content-DTcfiWqU.mjs";
+import { t as SpeakPanel } from "./speak-panel-CAPfiq5N.mjs";
+import { t as BiText } from "./bi-text-WG33CKno.mjs";
+import { n as katakanaGroups, t as hiraganaGroups } from "./kana-ClSXJNvR.mjs";
+import { t as kanjiItems } from "./kanji-BU65v4Ln.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/review-DY4JEBqk.js
+var import_react = /* @__PURE__ */ __toESM(require_react());
+var import_jsx_runtime = require_jsx_runtime();
+function otherMeanings(except, n) {
+	const pool = sentenceBank().map((s) => s.meaning).filter((m) => m.en !== except);
+	return shuffle(pool).slice(0, n);
+}
+function buildReviewSet(completedLessons, size = 8) {
+	const sentences = reachableSentences(completedLessons);
+	const items = [];
+	const listenPool = shuffle(sentences).slice(0, 3);
+	for (const s of listenPool) {
+		const wrong = otherMeanings(s.meaning.en, 2);
+		const options = shuffle([{
+			label: s.meaning,
+			correct: true
+		}, ...wrong.map((w) => ({
+			label: w,
+			correct: false
+		}))]);
+		items.push({
+			kind: "listen",
+			ja: s.ja,
+			romaji: s.romaji,
+			meaning: s.meaning,
+			question: {
+				en: "What is happening?",
+				bn: "কী হচ্ছে?"
+			},
+			options
+		});
+	}
+	const completePool = shuffle(sentences.filter((s) => s.ja.replace(/\s/g, "").length >= 4)).slice(0, 2);
+	for (const s of completePool) {
+		const pieces = s.ja.replace(/[。？！]/g, "").split(/\s+/).filter(Boolean);
+		if (pieces.length < 2) continue;
+		const distractors = shuffle(sentenceBank().flatMap((x) => x.ja.replace(/[。？！]/g, "").split(/\s+/)).filter((p) => p && !pieces.includes(p))).slice(0, 3);
+		items.push({
+			kind: "complete",
+			ja: s.ja,
+			romaji: s.romaji,
+			meaning: s.meaning,
+			pieces,
+			distractors
+		});
+	}
+	const talk = shuffle(dialogues).slice(0, 2);
+	for (const d of talk) {
+		const you = d.lines.find((l) => l.role === "you");
+		const them = d.lines.find((l) => l.role === "them");
+		if (!you || you.role !== "you" || !them || them.role !== "them") continue;
+		items.push({
+			kind: "respond",
+			promptJa: them.ja,
+			promptRomaji: them.romaji,
+			promptMeaning: them.meaning,
+			options: you.options
+		});
+	}
+	const kanaChars = [...hiraganaGroups, ...katakanaGroups].flatMap((g) => g.chars);
+	const kanaPick = shuffle(kanaChars).slice(0, 2);
+	for (const k of kanaPick) {
+		const others = shuffle(kanaChars.filter((c) => c.char !== k.char)).slice(0, 3);
+		items.push({
+			kind: "kana",
+			char: k.char,
+			romaji: k.romaji,
+			options: shuffle([{
+				char: k.char,
+				romaji: k.romaji,
+				correct: true
+			}, ...others.map((o) => ({
+				char: o.char,
+				romaji: o.romaji,
+				correct: false
+			}))])
+		});
+	}
+	const kanjiPick = shuffle(kanjiItems).slice(0, 1);
+	for (const k of kanjiPick) {
+		const wrong = shuffle(kanjiItems.filter((x) => x.id !== k.id)).slice(0, 2);
+		items.push({
+			kind: "kanji",
+			kanji: k.kanji,
+			meaning: k.meaning,
+			sentence: k.sentences[0]?.ja ?? k.kanji,
+			options: shuffle([{
+				label: k.meaning,
+				correct: true
+			}, ...wrong.map((w) => ({
+				label: w.meaning,
+				correct: false
+			}))])
+		});
+	}
+	const repeat = shuffle(sentences).slice(0, 2);
+	for (const s of repeat) items.push({
+		kind: "repeat",
+		ja: s.ja,
+		romaji: s.romaji,
+		meaning: s.meaning
+	});
+	return shuffle(items).slice(0, size);
+}
+function Review() {
+	const completed = useProgress((s) => s.completedLessons);
+	const mark = useProgress((s) => s.markReview);
+	const items = (0, import_react.useMemo)(() => buildReviewSet(completed, 8), [completed]);
+	const [i, setI] = (0, import_react.useState)(0);
+	const [finished, setFinished] = (0, import_react.useState)(false);
+	const item = items[i];
+	const next = () => {
+		mark();
+		if (i + 1 >= items.length) setFinished(true);
+		else setI(i + 1);
+	};
+	if (finished) return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Page, {
+		title: "That's enough for now",
+		kicker: "Review",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+			className: "text-sm leading-relaxed text-muted-foreground",
+			children: "You listened, chose situations, completed shapes, and spoke. The language stays by returning, not by testing."
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+			className: "w-full",
+			onClick: () => {
+				setI(0);
+				setFinished(false);
+			},
+			children: "Another short round"
+		})]
+	});
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Page, {
+		title: "Return to Japanese",
+		kicker: "Review",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "text-sm text-muted-foreground",
+				children: "Not a translation quiz — listen, choose, complete, respond."
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+				className: "text-xs tabular-nums text-muted-foreground",
+				children: [
+					i + 1,
+					" / ",
+					items.length
+				]
+			}),
+			item ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ReviewCard, {
+				item,
+				onNext: next
+			}, `${item.kind}-${i}`) : null
+		]
+	});
+}
+function ReviewCard({ item, onNext }) {
+	const showRomaji = useProgress((s) => s.showRomaji);
+	const autoPlay = useProgress((s) => s.autoPlay);
+	const [picked, setPicked] = (0, import_react.useState)(null);
+	if (item.kind === "listen") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+		className: "space-y-4 p-5",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				lang: "ja",
+				className: "ja text-center text-2xl",
+				children: item.ja
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AudioBar, {
+				ja: item.ja,
+				auto: autoPlay && speechUnlocked()
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(BiText, {
+				text: item.question,
+				revealed: true
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				className: "space-y-2",
+				children: item.options.map((o, idx) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+					type: "button",
+					disabled: picked !== null,
+					onClick: () => setPicked(String(idx)),
+					className: cn("w-full rounded-[var(--radius-md)] bg-background px-4 py-3 text-left text-sm shadow-[var(--shadow-border)]", picked !== null && o.correct && "bg-success/10", picked === String(idx) && !o.correct && "bg-destructive/10"),
+					children: o.label.en
+				}, idx))
+			}),
+			picked !== null ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(BiText, {
+				text: item.meaning,
+				revealed: true
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+				className: "w-full",
+				onClick: () => {
+					setPicked(null);
+					onNext();
+				},
+				children: "Continue"
+			})] }) : null
+		]
+	});
+	if (item.kind === "complete") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CompleteReview, {
+		item,
+		onNext,
+		showRomaji
+	});
+	if (item.kind === "respond") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+		className: "space-y-4 p-5",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "text-xs uppercase tracking-wider text-muted-foreground",
+				children: "They say"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				lang: "ja",
+				className: "ja text-2xl",
+				children: item.promptJa
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AudioBar, {
+				ja: item.promptJa,
+				auto: autoPlay && speechUnlocked()
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				className: "space-y-2",
+				children: item.options.map((o, idx) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+					type: "button",
+					disabled: picked !== null,
+					onClick: () => setPicked(String(idx)),
+					className: cn("w-full rounded-[var(--radius-md)] bg-background px-4 py-3 text-left text-sm shadow-[var(--shadow-border)]", picked !== null && o.correct && "bg-success/10", picked === String(idx) && !o.correct && "bg-destructive/10"),
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+						lang: "ja",
+						className: "ja block",
+						children: o.ja
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+						className: "text-muted-foreground",
+						children: o.meaning.en
+					})]
+				}, idx))
+			}),
+			picked !== null ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+				className: "w-full",
+				onClick: () => {
+					setPicked(null);
+					onNext();
+				},
+				children: "Continue"
+			}) : null
+		]
+	});
+	if (item.kind === "kana") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+		className: "space-y-4 p-5",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "text-sm",
+				children: "Which character is this sound?"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AudioBar, {
+				ja: item.char,
+				auto: autoPlay && speechUnlocked(),
+				size: "lg"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				className: "grid grid-cols-2 gap-2",
+				children: item.options.map((o) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+					type: "button",
+					disabled: picked !== null,
+					onClick: () => setPicked(o.char),
+					className: cn("flex h-16 items-center justify-center rounded-[var(--radius-lg)] bg-background font-display text-3xl shadow-[var(--shadow-border)]", picked && o.correct && "bg-success/10", picked === o.char && !o.correct && "bg-destructive/10"),
+					children: o.char
+				}, o.char))
+			}),
+			picked !== null ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+				className: "w-full",
+				onClick: () => {
+					setPicked(null);
+					onNext();
+				},
+				children: "Continue"
+			}) : null
+		]
+	});
+	if (item.kind === "kanji") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+		className: "space-y-4 p-5",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				lang: "ja",
+				className: "ja text-center text-5xl",
+				children: item.kanji
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				lang: "ja",
+				className: "ja text-center text-lg",
+				children: item.sentence
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AudioBar, { ja: item.sentence }),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				className: "space-y-2",
+				children: item.options.map((o, idx) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+					type: "button",
+					disabled: picked !== null,
+					onClick: () => setPicked(String(idx)),
+					className: cn("w-full rounded-[var(--radius-md)] bg-background px-4 py-3 text-left text-sm shadow-[var(--shadow-border)]", picked !== null && o.correct && "bg-success/10", picked === String(idx) && !o.correct && "bg-destructive/10"),
+					children: o.label.en
+				}, idx))
+			}),
+			picked !== null ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+				className: "w-full",
+				onClick: () => {
+					setPicked(null);
+					onNext();
+				},
+				children: "Continue"
+			}) : null
+		]
+	});
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+		className: "space-y-4 p-5",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				lang: "ja",
+				className: "ja text-center text-3xl",
+				children: item.ja
+			}),
+			showRomaji ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "text-center text-sm text-muted-foreground",
+				children: item.romaji
+			}) : null,
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AudioBar, {
+				ja: item.ja,
+				auto: autoPlay && speechUnlocked()
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SpeakPanel, { ja: item.ja }),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(BiText, {
+				text: item.meaning,
+				revealed: true
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+				className: "w-full",
+				onClick: onNext,
+				children: "Continue"
+			})
+		]
+	});
+}
+function CompleteReview({ item, onNext, showRomaji }) {
+	const tiles = (0, import_react.useMemo)(() => shuffle([...item.pieces, ...item.distractors]), [item]);
+	const [built, setBuilt] = (0, import_react.useState)([]);
+	const done = built.length === item.pieces.length;
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+		className: "space-y-4 p-5",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "text-sm",
+				children: "Complete the sentence in order."
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				lang: "ja",
+				className: "ja text-xl",
+				children: built.join(" ") || "…"
+			}),
+			showRomaji ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "text-xs text-muted-foreground",
+				children: item.romaji
+			}) : null,
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				className: "flex flex-wrap gap-2",
+				children: tiles.map((t, idx) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+					type: "button",
+					onClick: () => {
+						if (t === item.pieces[built.length]) {
+							const n = [...built, t];
+							setBuilt(n);
+						}
+					},
+					className: "rounded-[var(--radius-md)] bg-background px-3 py-2 font-display shadow-[var(--shadow-border)]",
+					children: t
+				}, `${t}-${idx}`))
+			}),
+			done ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(BiText, {
+				text: item.meaning,
+				revealed: true
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+				className: "w-full",
+				onClick: onNext,
+				children: "Continue"
+			})] }) : null
+		]
+	});
+}
+//#endregion
+export { Review as component };
